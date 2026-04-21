@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: Parade-ground-backend
+
+  #MySQL??
+  datasource:
+    driver-class-name: # <todo> ???
+    url: # <todo> url ?????
+    username: root
+    password: 
+
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+#mybatis-plus??
+mybatis-plus:
+  configuration:
+    # MyBatis ??
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      # ????
+      logic-delete-field: isDelete
+
+#knife4j??
+# springdoc-openapi????
+springdoc:
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      # ????????????
+      packages-to-scan: com.cyx.paradegroundbackend.controller
+# knife4j???????????????
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

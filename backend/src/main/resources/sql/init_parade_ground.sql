@@ -1,0 +1,57 @@
+CREATE DATABASE IF NOT EXISTS `Parade-ground`
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
+
+USE `Parade-ground`;
+
+CREATE TABLE IF NOT EXISTS user_info (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  userAccount VARCHAR(64) NOT NULL COMMENT '用户账号',
+  userPassword VARCHAR(255) NOT NULL COMMENT '用户密码',
+  userName VARCHAR(64) NOT NULL DEFAULT 'coder_player' COMMENT '用户昵称',
+  currentSalary INT NOT NULL DEFAULT 10000 COMMENT '当前月薪',
+  createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  isDelete TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_userAccount (userAccount)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+
+CREATE TABLE IF NOT EXISTS level_info (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  levelId VARCHAR(64) NOT NULL COMMENT '关卡业务编号',
+  levelName VARCHAR(128) NOT NULL COMMENT '关卡名称',
+  difficulty VARCHAR(32) NOT NULL COMMENT '难度',
+  salaryRange VARCHAR(32) NOT NULL COMMENT '薪资区间',
+  tags TEXT NOT NULL COMMENT '标签列表',
+  requirement TEXT NOT NULL COMMENT '需求描述',
+  options TEXT NOT NULL COMMENT '候选选项列表',
+  correctOptionIds TEXT NOT NULL COMMENT '正确选项编号列表',
+  analysisDirection TEXT NULL COMMENT '考察方向',
+  createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  isDelete TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_levelId (levelId),
+  KEY idx_difficulty_salaryRange (difficulty, salaryRange)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='关卡表';
+
+CREATE TABLE IF NOT EXISTS answer_record (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  userId BIGINT UNSIGNED NOT NULL COMMENT '用户 id',
+  levelId VARCHAR(64) NOT NULL COMMENT '关卡业务编号',
+  selectedOptionIds TEXT NOT NULL COMMENT '用户选择的选项编号列表',
+  correctOptionIds TEXT NOT NULL COMMENT '判题时的正确选项编号列表',
+  clientSpendSeconds INT NOT NULL DEFAULT 0 COMMENT '作答耗时秒数',
+  score INT NOT NULL DEFAULT 0 COMMENT '得分',
+  salaryChange INT NOT NULL DEFAULT 0 COMMENT '薪资变动金额',
+  updatedSalary INT NOT NULL DEFAULT 10000 COMMENT '变动后月薪',
+  resultReport TEXT NOT NULL COMMENT '结果报告',
+  createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  isDelete TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  PRIMARY KEY (id),
+  KEY idx_userId_createTime (userId, createTime),
+  KEY idx_userId_levelId (userId, levelId),
+  KEY idx_levelId (levelId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='作答记录表';

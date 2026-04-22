@@ -1,38 +1,48 @@
 spring:
   application:
     name: Parade-ground-backend
-
-  #MySQL??
   datasource:
-    driver-class-name: # <todo> ???
-    url: # <todo> url ?????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 
+  jackson:
+    default-property-inclusion: non_null
+
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: ${OPENROUTER_API_KEY:}
+      base-url: https://openrouter.ai/api/v1
+      model-name: qwen/qwen3-235b-a22b-2507
+      temperature: 0.2
+      max-tokens: 4096
+      timeout: 60s
+      max-retries: 0
 
 server:
   port: 8123
   servlet:
     context-path: /api
 
-#mybatis-plus??
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.cyx.paradegroundbackend.model.entity
   configuration:
-    # MyBatis ??
     map-underscore-to-camel-case: false
   global-config:
     db-config:
-      # ????
+      table-underline: false
       logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
-#knife4j??
-# springdoc-openapi????
 springdoc:
   group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      # ????????????
+    - group: default
+      paths-to-match: /**
       packages-to-scan: com.cyx.paradegroundbackend.controller
-# knife4j???????????????
+
 knife4j:
   enable: true
   setting:

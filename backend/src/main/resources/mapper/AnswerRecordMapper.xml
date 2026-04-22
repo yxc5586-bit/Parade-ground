@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyx.paradegroundbackend.mapper.AnswerRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.cyx.paradegroundbackend.model.entity.AnswerRecord">
+        <id property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="levelId" column="levelId"/>
+        <result property="selectedOptionIds" column="selectedOptionIds"/>
+        <result property="correctOptionIds" column="correctOptionIds"/>
+        <result property="clientSpendSeconds" column="clientSpendSeconds"/>
+        <result property="score" column="score"/>
+        <result property="salaryChange" column="salaryChange"/>
+        <result property="updatedSalary" column="updatedSalary"/>
+        <result property="resultReport" column="resultReport"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="isDelete" column="isDelete"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, userId, levelId, selectedOptionIds, correctOptionIds, clientSpendSeconds,
+        score, salaryChange, updatedSalary, resultReport, createTime, updateTime, isDelete
+    </sql>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM answer_record
+        WHERE userId = #{userId}
+          AND isDelete = 0
+        ORDER BY createTime DESC
+    </select>
+</mapper>

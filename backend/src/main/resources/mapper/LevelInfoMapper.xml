@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyx.paradegroundbackend.mapper.LevelInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.cyx.paradegroundbackend.model.entity.LevelInfo">
+        <id property="id" column="id"/>
+        <result property="levelId" column="levelId"/>
+        <result property="levelName" column="levelName"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="salaryRange" column="salaryRange"/>
+        <result property="tags" column="tags"/>
+        <result property="requirement" column="requirement"/>
+        <result property="options" column="options"/>
+        <result property="correctOptionIds" column="correctOptionIds"/>
+        <result property="analysisDirection" column="analysisDirection"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="isDelete" column="isDelete"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, levelId, levelName, difficulty, salaryRange, tags, requirement, options,
+        correctOptionIds, analysisDirection, createTime, updateTime, isDelete
+    </sql>
+
+    <select id="selectByLevelId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM level_info
+        WHERE levelId = #{levelId}
+          AND isDelete = 0
+        LIMIT 1
+    </select>
+</mapper>

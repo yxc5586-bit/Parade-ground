@@ -78,7 +78,7 @@
         <el-icon><Reading /></el-icon>
         标准解法
       </h3>
-      <p class="solution">{{ report.detailedSolution || '暂无标准解法。' }}</p>
+      <div class="solution-markdown" v-html="renderedSolution"></div>
     </section>
   </div>
 </template>
@@ -86,7 +86,14 @@
 <script setup>
 import { computed } from 'vue'
 import { Briefcase, DocumentChecked, Reading } from '@element-plus/icons-vue'
+import MarkdownIt from 'markdown-it'
 import { formatSalary, formatSignedMoney, normalizeArray } from '../utils/format'
+
+const markdown = new MarkdownIt({
+  html: false,
+  linkify: true,
+  breaks: true,
+})
 
 const props = defineProps({
   result: {
@@ -104,6 +111,7 @@ const correctChoices = computed(() => normalizeArray(reasonAnalysis.value.correc
 const wrongChoices = computed(() => normalizeArray(reasonAnalysis.value.wrongChoices))
 const missedChoices = computed(() => normalizeArray(reasonAnalysis.value.missedChoices))
 const salaryChangeClass = computed(() => (Number(props.result.salaryChange || 0) >= 0 ? 'salary-up' : 'salary-down'))
+const renderedSolution = computed(() => markdown.render(report.value.detailedSolution || '暂无标准解法。'))
 const progressColor = computed(() => {
   if (score.value >= 85) return '#d99a3d'
   if (score.value >= 60) return '#c18a3a'
@@ -229,11 +237,115 @@ li + li {
   margin-top: 6px;
 }
 
-.solution {
+.solution-markdown {
   margin: 0;
   color: var(--text);
   line-height: 1.9;
-  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.solution-markdown :deep(*) {
+  max-width: 100%;
+}
+
+.solution-markdown :deep(p),
+.solution-markdown :deep(ul),
+.solution-markdown :deep(ol),
+.solution-markdown :deep(blockquote),
+.solution-markdown :deep(pre) {
+  margin: 0 0 12px;
+}
+
+.solution-markdown :deep(:last-child) {
+  margin-bottom: 0;
+}
+
+.solution-markdown :deep(h1),
+.solution-markdown :deep(h2),
+.solution-markdown :deep(h3),
+.solution-markdown :deep(h4) {
+  margin: 16px 0 10px;
+  color: #f3c870;
+  line-height: 1.35;
+}
+
+.solution-markdown :deep(h1) {
+  font-size: 22px;
+}
+
+.solution-markdown :deep(h2) {
+  font-size: 20px;
+}
+
+.solution-markdown :deep(h3) {
+  font-size: 18px;
+}
+
+.solution-markdown :deep(h4) {
+  font-size: 16px;
+}
+
+.solution-markdown :deep(ul),
+.solution-markdown :deep(ol) {
+  padding-left: 22px;
+}
+
+.solution-markdown :deep(li + li) {
+  margin-top: 6px;
+}
+
+.solution-markdown :deep(a) {
+  color: var(--amber);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.solution-markdown :deep(code) {
+  padding: 2px 6px;
+  color: #ffe2a0;
+  background: rgba(31, 22, 15, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+}
+
+.solution-markdown :deep(pre) {
+  padding: 14px;
+  background: rgba(31, 22, 15, 0.62);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.solution-markdown :deep(pre code) {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.solution-markdown :deep(blockquote) {
+  padding: 2px 0 2px 12px;
+  color: var(--muted);
+  border-left: 3px solid var(--primary);
+}
+
+.solution-markdown :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+.solution-markdown :deep(th),
+.solution-markdown :deep(td) {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.solution-markdown :deep(th) {
+  color: #e9c275;
+  background: rgba(31, 22, 15, 0.42);
 }
 
 @media (max-width: 900px) {

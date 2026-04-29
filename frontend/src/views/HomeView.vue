@@ -2,16 +2,23 @@
   <div class="page home-page">
     <section class="command-band">
       <div>
-        <p class="eyebrow">研发作战台</p>
-        <h1>{{ state.user?.userName || state.user?.userAccount }}，今天继续评审方案</h1>
-        <p>每一关都会按当前薪资生成企业场景题，选项拖进答题区后提交，由 AI 评委给出复盘和薪资调整。</p>
+        <p class="eyebrow">长城落日 · 代码演武</p>
+        <h1>程序员技术练兵场</h1>
+        <p class="commander">
+          {{ state.user?.userName || state.user?.userAccount }}，入营列阵。每一关都会按当前薪资生成企业场景题，在代码沙场中磨炼基本功，突破技术关卡。
+        </p>
+        <div class="hero-ledger">
+          <span>今日目标：破阵一关</span>
+          <span>训练方式：方案评审</span>
+          <span>战力结算：薪资曲线</span>
+        </div>
       </div>
       <div class="actions">
         <el-select v-model="preferredDirection" class="direction-select" placeholder="方向">
-          <el-option label="后端" value="backend" />
-          <el-option label="前端" value="frontend" />
-          <el-option label="架构" value="architecture" />
-          <el-option label="全栈" value="fullstack" />
+          <el-option label="后端破阵营" value="backend" />
+          <el-option label="前端攻城营" value="frontend" />
+          <el-option label="系统设计沙盘" value="architecture" />
+          <el-option label="全栈远征营" value="fullstack" />
         </el-select>
         <el-button
           type="primary"
@@ -20,7 +27,7 @@
           :loading="generating"
           @click="enterChallenge"
         >
-          {{ currentLevel ? '继续当前关卡' : '生成下一关' }}
+          {{ currentLevel ? '继续当前战役' : '开始练兵' }}
         </el-button>
       </div>
     </section>
@@ -31,11 +38,11 @@
         <strong class="metric-value amber">{{ formatSalary(state.user?.currentSalary) }}</strong>
       </div>
       <div class="metric">
-        <span class="metric-label">当前段位</span>
+        <span class="metric-label">当前军阶</span>
         <strong class="metric-value">{{ rank }}</strong>
       </div>
       <div class="metric">
-        <span class="metric-label">最近闯关</span>
+        <span class="metric-label">累计战役</span>
         <strong class="metric-value">{{ page.total || 0 }} 次</strong>
       </div>
     </section>
@@ -44,9 +51,9 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">进行中的关卡</h2>
-          <p class="section-desc">这题还没提交，后端会通过当前会话保留它。</p>
+          <p class="section-desc">战局尚未收束，继续完成这场技术演武。</p>
         </div>
-        <el-button type="primary" :icon="Right" @click="goChallenge(currentLevel.levelId)">继续挑战</el-button>
+        <el-button type="primary" :icon="Right" @click="goChallenge(currentLevel.levelId)">继续破阵</el-button>
       </div>
       <div class="current-level">
         <h3>{{ currentLevel.levelName }}</h3>
@@ -62,7 +69,7 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">最近战绩</h2>
-          <p class="section-desc">看分数，也看薪资曲线。职场没有白答的题。</p>
+          <p class="section-desc">看分数，也看薪资曲线。沙场没有白练的基本功。</p>
         </div>
         <el-button plain :icon="Tickets" @click="router.push('/records')">全部战绩</el-button>
       </div>
@@ -168,45 +175,92 @@ async function enterChallenge() {
 }
 
 .command-band {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 24px;
   align-items: end;
-  padding: 26px;
-  color: #fff;
-  background: #17362f;
+  min-height: 420px;
+  padding: 42px;
+  color: var(--text);
+  background:
+    linear-gradient(90deg, rgba(31, 22, 15, 0.92) 0%, rgba(31, 22, 15, 0.66) 42%, rgba(31, 22, 15, 0.16) 100%),
+    linear-gradient(0deg, rgba(31, 22, 15, 0.52), rgba(31, 22, 15, 0.08)),
+    url('../assets/banner.png') center / cover no-repeat;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
+.command-band::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 36%;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(180deg, transparent, rgba(31, 22, 15, 0.76));
+}
+
+.command-band > * {
+  position: relative;
+  z-index: 1;
+}
+
 .eyebrow {
   margin: 0 0 10px;
-  color: #b9efe5;
+  color: #e9c275;
   font-size: 13px;
   font-weight: 900;
+  letter-spacing: 0.12em;
 }
 
 .command-band h1 {
   margin: 0;
-  font-size: 30px;
+  max-width: 620px;
+  font-size: clamp(34px, 5vw, 58px);
   line-height: 1.25;
   letter-spacing: 0;
+  text-shadow: 0 3px 22px rgba(12, 8, 4, 0.5);
 }
 
-.command-band p:last-child {
-  max-width: 760px;
+.commander {
+  max-width: 680px;
   margin: 12px 0 0;
-  color: #d8e9e3;
+  color: #ecd8aa;
   line-height: 1.75;
+}
+
+.hero-ledger {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.hero-ledger span {
+  padding: 8px 10px;
+  color: #f0d8a1;
+  background: rgba(31, 22, 15, 0.42);
+  border: 1px solid rgba(217, 154, 61, 0.28);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .actions {
   display: flex;
   gap: 10px;
+  align-items: center;
+  padding: 12px;
+  background: rgba(31, 22, 15, 0.52);
+  border: 1px solid rgba(217, 154, 61, 0.26);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
 }
 
 .direction-select {
-  width: 132px;
+  width: 168px;
 }
 
 .amber {
@@ -229,11 +283,14 @@ async function enterChallenge() {
 @media (max-width: 900px) {
   .command-band {
     grid-template-columns: 1fr;
-    padding: 20px;
+    min-height: 520px;
+    padding: 28px 20px;
+    background-position: 62% center;
   }
 
   .actions {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .direction-select {

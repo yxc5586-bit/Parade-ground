@@ -12,8 +12,8 @@
           </div>
         </div>
         <div class="toolbar">
-          <el-button plain :icon="Back" @click="router.push('/')">回大厅</el-button>
-          <el-button type="primary" :icon="Promotion" :loading="creating" @click="startNextLevel">下一关</el-button>
+          <el-button plain :icon="Back" @click="router.push('/')">回营门</el-button>
+          <el-button type="primary" :icon="Promotion" :loading="creating" @click="startNextLevel">再开一役</el-button>
         </div>
       </section>
 
@@ -43,7 +43,7 @@
                   <strong>{{ option.id }}</strong>
                   <p>{{ option.content }}</p>
                   <div class="option-state">
-                    <el-tag v-if="isSelectedOption(option.id)" size="small" effect="plain">本次选择</el-tag>
+                    <el-tag v-if="isSelectedOption(option.id)" size="small" effect="plain">本次布阵</el-tag>
                     <el-tag v-if="isStandardOption(option.id)" size="small" type="success" effect="plain">标准答案</el-tag>
                   </div>
                 </article>
@@ -240,8 +240,8 @@ function optionClass(id) {
 }
 
 .result-option-card.is-selected {
-  background: #f4fffc;
-  border-color: #9bd8cf;
+  background: rgba(217, 154, 61, 0.12);
+  border-color: var(--line-bright);
 }
 
 .result-option-card.is-standard {
@@ -253,8 +253,8 @@ function optionClass(id) {
   width: 34px;
   height: 30px;
   place-items: center;
-  color: var(--primary-deep);
-  background: var(--primary-soft);
+  color: #1f160f;
+  background: var(--primary);
   border-radius: 6px;
   font-size: 13px;
 }
@@ -262,7 +262,7 @@ function optionClass(id) {
 .result-option-card p {
   min-width: 0;
   margin: 0;
-  color: #314038;
+  color: var(--text);
   line-height: 1.65;
   overflow-wrap: anywhere;
 }
@@ -280,7 +280,7 @@ function optionClass(id) {
   color: var(--muted);
   text-align: center;
   background: var(--panel-soft);
-  border: 1px dashed #b9cbbd;
+  border: 1px dashed var(--line-bright);
   border-radius: var(--radius);
 }
 

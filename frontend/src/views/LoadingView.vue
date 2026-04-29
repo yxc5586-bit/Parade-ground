@@ -21,7 +21,7 @@
         <el-alert :title="errorMessage" type="error" show-icon :closable="false" />
         <div class="toolbar">
           <el-button plain @click="goBack">返回上一页</el-button>
-          <el-button type="primary" @click="router.replace('/')">回大厅</el-button>
+          <el-button type="primary" @click="router.replace('/')">回营门</el-button>
         </div>
       </div>
     </section>
@@ -39,14 +39,14 @@ import { consumePendingTask } from '../utils/pendingTask'
 
 const copyMap = {
   'generate-level': {
-    eyebrow: '关卡生成中',
-    title: '正在生成下一关',
-    description: '系统正在按你的当前薪资和方向生成企业场景题，马上进入挑战。',
+    eyebrow: '战役生成中',
+    title: '正在推演下一场训练',
+    description: '系统正在按你的当前薪资和方向生成企业场景题，马上进入演武。',
   },
   'submit-report': {
     eyebrow: 'AI 评审中',
     title: '正在评审答案并生成结算报告',
-    description: '评委正在核对选项、生成复盘和薪资调整，请稍等片刻。',
+    description: '评委正在核对布阵、生成复盘和薪资调整，请稍等片刻。',
   },
 }
 

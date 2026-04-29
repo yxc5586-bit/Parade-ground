@@ -9,13 +9,13 @@ const state = reactive({
 
 function resolveRank(salary) {
   const value = Number(salary || 0)
-  if (value < 8000) return '实习试炼生'
-  if (value < 12000) return '初级打工人'
-  if (value < 18000) return '业务熟练工'
-  if (value < 25000) return '中级开发战士'
-  if (value < 35000) return '高级开发统领'
-  if (value < 50000) return '架构冲锋队长'
-  return '系统设计大魔王'
+  if (value < 8000) return '试炼新兵'
+  if (value < 12000) return '初阶校尉'
+  if (value < 18000) return '破阵先锋'
+  if (value < 25000) return '中阶统领'
+  if (value < 35000) return '高级主将'
+  if (value < 50000) return '架构军师'
+  return '系统帅才'
 }
 
 async function fetchCurrentUser(options = {}) {

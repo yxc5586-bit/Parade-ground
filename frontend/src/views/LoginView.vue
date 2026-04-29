@@ -1,23 +1,23 @@
 <template>
   <div class="login-page">
     <section class="login-copy">
-      <div class="brand-mark">PG</div>
+      <div class="brand-mark">练</div>
       <h1>程序员技术练兵场</h1>
       <p>
-        面向真实企业场景的方案设计闯关。AI 出题、AI 评审，薪资曲线会很诚实。
+        面向真实企业场景的方案设计闯关。AI 出题、AI 评审，在代码沙场里磨炼判断力。
       </p>
       <div class="copy-grid">
-        <span>业务场景</span>
-        <span>架构选型</span>
-        <span>方案复盘</span>
-        <span>薪资成长</span>
+        <span>实战战役</span>
+        <span>架构排兵</span>
+        <span>复盘军报</span>
+        <span>战力成长</span>
       </div>
     </section>
 
     <section class="login-panel">
       <div class="panel-title">
         <h2>{{ isRegister ? '创建练兵账号' : '进入练兵场' }}</h2>
-        <p>{{ isRegister ? '初始月薪固定 10000 元，之后全靠方案评审说话。' : '登录后继续你的闯关和薪资曲线。' }}</p>
+        <p>{{ isRegister ? '初始月薪固定 10000 元，后续全凭方案评审结算。' : '登录后继续你的关卡、复盘和薪资曲线。' }}</p>
       </div>
 
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top" @submit.prevent>
@@ -126,6 +126,7 @@ async function handleSubmit() {
 
 <style scoped>
 .login-page {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 420px;
   gap: 30px;
@@ -134,6 +135,17 @@ async function handleSubmit() {
   min-height: 100vh;
   margin: 0 auto;
   padding: 34px 0;
+}
+
+.login-page::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(31, 22, 15, 0.92), rgba(31, 22, 15, 0.7)),
+    url('../assets/banner.png') center / cover no-repeat;
+  opacity: 0.46;
 }
 
 .login-copy {
@@ -145,10 +157,14 @@ async function handleSubmit() {
   width: 54px;
   height: 54px;
   place-items: center;
-  color: #fff;
+  color: #1f160f;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 23px;
   font-weight: 900;
-  background: var(--primary);
-  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--amber), var(--primary));
+  border: 1px solid rgba(230, 208, 163, 0.38);
+  border-radius: 4px;
+  box-shadow: 0 0 28px rgba(217, 154, 61, 0.2);
 }
 
 h1 {
@@ -162,7 +178,7 @@ h1 {
 .login-copy p {
   max-width: 560px;
   margin: 18px 0 0;
-  color: #35433a;
+  color: var(--muted);
   font-size: 18px;
   line-height: 1.8;
 }
@@ -177,10 +193,10 @@ h1 {
 
 .copy-grid span {
   padding: 12px;
-  color: var(--primary-deep);
-  background: var(--primary-soft);
-  border: 1px solid #bfe5dc;
-  border-radius: var(--radius);
+  color: #f0d8a1;
+  background: rgba(31, 22, 15, 0.44);
+  border: 1px solid var(--line);
+  border-radius: 4px;
   font-weight: 800;
   text-align: center;
 }
@@ -214,7 +230,7 @@ h1 {
   width: 100%;
   margin-top: 14px;
   padding: 0;
-  color: var(--primary);
+  color: var(--amber);
   background: transparent;
   border: 0;
   cursor: pointer;

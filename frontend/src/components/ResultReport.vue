@@ -105,9 +105,9 @@ const wrongChoices = computed(() => normalizeArray(reasonAnalysis.value.wrongCho
 const missedChoices = computed(() => normalizeArray(reasonAnalysis.value.missedChoices))
 const salaryChangeClass = computed(() => (Number(props.result.salaryChange || 0) >= 0 ? 'salary-up' : 'salary-down'))
 const progressColor = computed(() => {
-  if (score.value >= 85) return '#0f766e'
-  if (score.value >= 60) return '#b7791f'
-  return '#c2410c'
+  if (score.value >= 85) return '#d99a3d'
+  if (score.value >= 60) return '#c18a3a'
+  return '#d97145'
 })
 </script>
 
@@ -143,7 +143,7 @@ const progressColor = computed(() => {
 
 .report-copy p {
   margin: 10px 0 0;
-  color: #314038;
+  color: var(--text);
   line-height: 1.75;
 }
 
@@ -207,7 +207,7 @@ const progressColor = computed(() => {
 
 .job-card p {
   margin: 10px 0 0;
-  color: #314038;
+  color: var(--text);
   font-size: 13px;
   line-height: 1.6;
 }
@@ -221,7 +221,7 @@ const progressColor = computed(() => {
 ul {
   margin: 0;
   padding-left: 18px;
-  color: #314038;
+  color: var(--text);
   line-height: 1.7;
 }
 
@@ -231,7 +231,7 @@ li + li {
 
 .solution {
   margin: 0;
-  color: #314038;
+  color: var(--text);
   line-height: 1.9;
   white-space: pre-wrap;
 }

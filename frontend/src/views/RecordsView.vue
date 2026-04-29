@@ -6,11 +6,11 @@
           <h1 class="section-title">历史战绩</h1>
           <p class="section-desc">每一次方案评审都会沉淀在这里，方便复盘薪资变化和错漏点。</p>
         </div>
-        <el-button type="primary" :icon="Promotion" :loading="creating" @click="startNewLevel">生成下一关</el-button>
+        <el-button type="primary" :icon="Promotion" :loading="creating" @click="startNewLevel">开新战役</el-button>
       </div>
 
       <div class="table-wrap">
-        <el-table v-loading="loading" :data="page.records" empty-text="暂无战绩">
+          <el-table v-loading="loading" :data="page.records" empty-text="暂无战绩，先开一役">
           <el-table-column prop="levelName" label="关卡名称" min-width="260" />
           <el-table-column prop="score" label="得分" width="100">
             <template #default="{ row }">

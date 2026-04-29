@@ -25,7 +25,7 @@
           <div class="section-header">
             <div>
               <h2 class="section-title">产品需求文档</h2>
-              <p class="section-desc">先读业务闭环，再决定技术选项。</p>
+              <p class="section-desc">先审战局边界，再决定技术布阵。</p>
             </div>
           </div>
           <div class="requirement-wrap">
@@ -45,13 +45,13 @@
           <div class="answer-header">
             <div>
               <h2>答题区域</h2>
-              <p>把你认为正确的方案拖进来，也可以直接点击候选项添加。</p>
+              <p>把你认为关键的方案拖入阵中，也可以直接点击候选项添加。</p>
             </div>
             <el-tag effect="plain">{{ selectedOptions.length }} 项</el-tag>
           </div>
 
           <div v-if="!selectedOptions.length" class="answer-empty">
-            这里还空着。把关键流程、组件、治理点放进来。
+            这里还空着。把关键流程、组件、治理点排入阵中。
           </div>
           <div v-else class="selected-list">
             <button
@@ -87,7 +87,7 @@
           <div class="pool-header">
             <div>
               <h2>候选选项</h2>
-              <p>正确项、干扰项和迷惑项混在一起，评审味儿很足。</p>
+              <p>正确项、干扰项和迷惑项混在一起，先辨阵，再出手。</p>
             </div>
             <el-input v-model="keyword" clearable placeholder="搜索选项" />
           </div>
@@ -310,9 +310,9 @@ async function submitAnswer() {
   gap: 8px;
   min-height: 36px;
   padding: 0 12px;
-  color: var(--primary-deep);
+  color: #f0d8a1;
   background: var(--primary-soft);
-  border: 1px solid #bfe5dc;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   font-weight: 900;
 }
@@ -343,12 +343,12 @@ async function submitAnswer() {
 }
 
 .answer-box {
-  border-color: #bfe5dc;
+  border-color: var(--line-bright);
 }
 
 .answer-box.is-over,
 .option-pool.is-over {
-  outline: 3px solid rgba(15, 118, 110, 0.18);
+  outline: 3px solid rgba(217, 154, 61, 0.18);
 }
 
 .answer-header,
@@ -384,7 +384,7 @@ async function submitAnswer() {
   color: var(--muted);
   text-align: center;
   background: var(--panel-soft);
-  border: 1px dashed #b9cbbd;
+  border: 1px dashed var(--line-bright);
   border-radius: var(--radius);
 }
 
@@ -418,7 +418,8 @@ async function submitAnswer() {
 
 .option-card:hover,
 .option-card:focus-visible {
-  border-color: var(--primary);
+  border-color: var(--line-bright);
+  box-shadow: var(--glow);
   outline: 0;
 }
 
@@ -427,23 +428,24 @@ async function submitAnswer() {
   width: 30px;
   height: 30px;
   place-items: center;
-  color: var(--primary-deep);
-  background: var(--primary-soft);
+  color: #1f160f;
+  background: var(--primary);
+  border: 1px solid rgba(217, 154, 61, 0.28);
   border-radius: 6px;
 }
 
 .option-card span {
-  color: #314038;
+  color: var(--text);
   line-height: 1.55;
 }
 
 .option-card .el-icon {
-  color: var(--primary);
+  color: var(--amber);
 }
 
 .option-card.selected {
-  background: #f4fffc;
-  border-color: #bfe5dc;
+  background: rgba(217, 154, 61, 0.12);
+  border-color: var(--line-bright);
 }
 
 .option-card.selected .el-icon {

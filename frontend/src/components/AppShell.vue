@@ -2,17 +2,17 @@
   <div class="shell">
     <header class="topbar">
       <router-link class="brand" to="/">
-        <span class="brand-mark">PG</span>
+        <span class="brand-mark">练</span>
         <span>
           <strong>程序员技术练兵场</strong>
-          <small>方案评审作战台</small>
+          <small>代码演武作战台</small>
         </span>
       </router-link>
 
       <nav class="nav">
         <router-link to="/">
           <el-icon><HomeFilled /></el-icon>
-          大厅
+          营门
         </router-link>
         <router-link to="/records">
           <el-icon><Tickets /></el-icon>
@@ -68,9 +68,10 @@ async function handleLogout() {
   align-items: center;
   gap: 18px;
   padding: 12px 28px;
-  background: rgba(245, 247, 244, 0.9);
+  background: rgba(31, 22, 15, 0.84);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 28px rgba(12, 8, 4, 0.26);
+  backdrop-filter: blur(16px) saturate(120%);
 }
 
 .brand {
@@ -84,11 +85,14 @@ async function handleLogout() {
   width: 38px;
   height: 38px;
   place-items: center;
-  color: #fff;
-  font-size: 13px;
+  color: #1f160f;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 17px;
   font-weight: 900;
-  background: var(--primary);
-  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--amber), var(--primary));
+  border: 1px solid rgba(230, 208, 163, 0.38);
+  border-radius: 4px;
+  box-shadow: 0 0 22px rgba(217, 154, 61, 0.18);
 }
 
 .brand strong,
@@ -111,7 +115,7 @@ async function handleLogout() {
   display: inline-flex;
   gap: 6px;
   padding: 4px;
-  background: #edf3ed;
+  background: rgba(12, 8, 4, 0.28);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
@@ -129,9 +133,9 @@ async function handleLogout() {
 }
 
 .nav a.router-link-active {
-  color: var(--text);
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(20, 28, 24, 0.08);
+  color: #1f160f;
+  background: linear-gradient(135deg, var(--primary), var(--amber));
+  box-shadow: 0 8px 18px rgba(217, 154, 61, 0.18);
 }
 
 .user-box {

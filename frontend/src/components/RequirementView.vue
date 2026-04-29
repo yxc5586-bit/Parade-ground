@@ -97,7 +97,7 @@ h3 {
 p,
 ul {
   margin: 0;
-  color: #314038;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.75;
 }
@@ -113,7 +113,7 @@ li + li {
 pre {
   margin: 0;
   overflow-x: auto;
-  color: #314038;
+  color: var(--text);
   white-space: pre-wrap;
 }
 </style>

@@ -28,12 +28,12 @@ defineProps({
   min-height: 36px;
   padding: 0 12px;
   background: var(--amber-soft);
-  border: 1px solid #f0d492;
+  border: 1px solid var(--line-bright);
   border-radius: var(--radius);
 }
 
 .salary-badge span {
-  color: #7a5a19;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 800;
 }

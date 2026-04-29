@@ -59,8 +59,8 @@ import { onMounted, reactive, ref } from 'vue'
 import { Promotion } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { gameApi } from '../api/game'
-import { levelApi } from '../api/level'
 import { formatDateTime, formatSalary, formatSignedMoney } from '../utils/format'
+import { createPendingTask } from '../utils/pendingTask'
 
 const router = useRouter()
 const loading = ref(false)
@@ -103,8 +103,12 @@ function handleSizeChange() {
 async function startNewLevel() {
   creating.value = true
   try {
-    const data = await levelApi.generate({ preferredDirection: 'backend' })
-    router.push(`/challenge/${data.levelId}`)
+    const task = createPendingTask({
+      type: 'generate-level',
+      payload: { preferredDirection: 'backend' },
+      from: router.currentRoute.value.fullPath,
+    })
+    await router.push({ name: 'loading', query: { id: task.id } })
   } finally {
     creating.value = false
   }

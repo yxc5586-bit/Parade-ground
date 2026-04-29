@@ -118,12 +118,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { Close, Plus, RefreshLeft, Select, Timer } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { gameApi } from '../api/game'
 import { levelApi } from '../api/level'
 import RequirementView from '../components/RequirementView.vue'
 import SalaryBadge from '../components/SalaryBadge.vue'
 import { useUser } from '../composables/useUser'
 import { formatSpendSeconds, normalizeArray, normalizeOptions } from '../utils/format'
+import { createPendingTask } from '../utils/pendingTask'
 
 const difficultyMap = {
   basic: '基础',
@@ -166,8 +166,8 @@ const filteredAvailableOptions = computed(() => {
 const difficultyLabel = computed(() => difficultyMap[level.value?.difficulty] || level.value?.difficulty || '-')
 
 onMounted(async () => {
-  await Promise.all([loadLevel(), fetchCurrentUser({ silent: true })])
-  startTimer()
+  const [ready] = await Promise.all([loadLevel(), fetchCurrentUser({ silent: true })])
+  if (ready) startTimer()
 })
 
 onBeforeUnmount(() => {
@@ -180,19 +180,23 @@ async function loadLevel() {
     const routeLevelId = route.params.levelId
     if (routeLevelId) {
       level.value = await levelApi.detail(routeLevelId)
-      return
+      return true
     }
 
     const current = await levelApi.current({ silent: true })
     if (current?.levelId) {
       level.value = current
       router.replace(`/challenge/${current.levelId}`)
-      return
+      return true
     }
 
-    const generated = await levelApi.generate({ preferredDirection: 'backend' })
-    level.value = await levelApi.detail(generated.levelId)
-    router.replace(`/challenge/${generated.levelId}`)
+    const task = createPendingTask({
+      type: 'generate-level',
+      payload: { preferredDirection: 'backend' },
+      from: router.currentRoute.value.fullPath,
+    })
+    await router.replace({ name: 'loading', query: { id: task.id } })
+    return false
   } finally {
     loading.value = false
   }
@@ -244,14 +248,19 @@ async function submitAnswer() {
 
   submitting.value = true
   try {
-    const result = await gameApi.submit({
-      levelId: level.value.levelId,
-      selectedOptionIds: selectedIds.value,
-      clientSpendSeconds: Math.max(1, elapsedSeconds.value),
+    const task = createPendingTask({
+      type: 'submit-report',
+      payload: {
+        levelId: level.value.levelId,
+        selectedOptionIds: [...selectedIds.value],
+        clientSpendSeconds: Math.max(1, elapsedSeconds.value),
+      },
+      from: router.currentRoute.value.fullPath,
     })
-    await fetchCurrentUser({ silent: true })
-    ElMessage.success('评审完成，结算报告已生成')
-    router.push(`/result/${result.recordId}`)
+    await router.push({
+      name: 'loading',
+      query: { id: task.id },
+    })
   } finally {
     submitting.value = false
   }

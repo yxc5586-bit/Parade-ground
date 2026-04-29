@@ -29,6 +29,11 @@ const routes = [
     component: () => import('../views/RecordsView.vue'),
   },
   {
+    path: '/loading',
+    name: 'loading',
+    component: () => import('../views/LoadingView.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },

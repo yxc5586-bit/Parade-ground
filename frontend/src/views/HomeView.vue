@@ -104,6 +104,7 @@ import { gameApi } from '../api/game'
 import { levelApi } from '../api/level'
 import { useUser } from '../composables/useUser'
 import { formatDateTime, formatSalary, formatSignedMoney, normalizeArray } from '../utils/format'
+import { createPendingTask } from '../utils/pendingTask'
 
 const router = useRouter()
 const { state, rank, fetchCurrentUser } = useUser()
@@ -148,8 +149,12 @@ async function enterChallenge() {
   }
   generating.value = true
   try {
-    const data = await levelApi.generate({ preferredDirection: preferredDirection.value })
-    router.push(`/challenge/${data.levelId}`)
+    const task = createPendingTask({
+      type: 'generate-level',
+      payload: { preferredDirection: preferredDirection.value },
+      from: router.currentRoute.value.fullPath,
+    })
+    await router.push({ name: 'loading', query: { id: task.id } })
   } finally {
     generating.value = false
   }

@@ -35,6 +35,11 @@ const routes = [
     meta: { admin: true },
   },
   {
+    path: '/levels',
+    name: 'levels',
+    component: () => import('../views/FeaturedLevelsView.vue'),
+  },
+  {
     path: '/loading',
     name: 'loading',
     component: () => import('../views/LoadingView.vue'),

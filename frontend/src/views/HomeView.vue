@@ -29,6 +29,13 @@
         >
           {{ currentLevel ? '继续当前战役' : '开始练兵' }}
         </el-button>
+        <el-button
+          size="large"
+          :icon="Tickets"
+          @click="router.push('/levels')"
+        >
+          精选战役
+        </el-button>
       </div>
     </section>
 

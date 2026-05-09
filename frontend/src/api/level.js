@@ -12,6 +12,9 @@ export const levelApi = {
   current(config = {}) {
     return http.get('/level/current', config)
   },
+  featuredPage(params = {}) {
+    return http.get('/level/featured/page', { params })
+  },
 
   // Admin
   adminList(params = {}) {

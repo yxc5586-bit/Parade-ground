@@ -18,6 +18,7 @@ import com.cyx.paradegroundbackend.mapper.LevelInfoMapper;
 import com.cyx.paradegroundbackend.model.dto.level.LevelAddRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelGenerateRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelQueryRequest;
+import com.cyx.paradegroundbackend.model.dto.common.PageRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelUpdateRequest;
 import com.cyx.paradegroundbackend.model.entity.AnswerRecord;
 import com.cyx.paradegroundbackend.model.entity.LevelInfo;
@@ -157,6 +158,20 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
         queryWrapper.eq(StringUtils.hasText(queryRequest.getDifficulty()), LevelInfo::getDifficulty, queryRequest.getDifficulty());
         queryWrapper.eq(StringUtils.hasText(queryRequest.getSalaryRange()), LevelInfo::getSalaryRange, queryRequest.getSalaryRange());
         queryWrapper.eq(queryRequest.getPriority() != null, LevelInfo::getPriority, queryRequest.getPriority());
+        queryWrapper.orderByDesc(LevelInfo::getPriority).orderByDesc(LevelInfo::getId);
+        return this.page(new Page<>(current, pageSize), queryWrapper);
+    }
+
+    @Override
+    public IPage<LevelInfo> listFeaturedLevelByPage(PageRequest pageRequest) {
+        PageRequest req = pageRequest == null ? new PageRequest() : pageRequest;
+        long current = req.getCurrent();
+        long pageSize = req.getPageSize();
+        if (pageSize <= 0 || pageSize > 50) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Invalid page size");
+        }
+        LambdaQueryWrapper<LevelInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.ge(LevelInfo::getPriority, 999);
         queryWrapper.orderByDesc(LevelInfo::getPriority).orderByDesc(LevelInfo::getId);
         return this.page(new Page<>(current, pageSize), queryWrapper);
     }

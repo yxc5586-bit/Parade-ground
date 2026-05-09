@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cyx.paradegroundbackend.model.dto.level.LevelAddRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelGenerateRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelQueryRequest;
+import com.cyx.paradegroundbackend.model.dto.common.PageRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelUpdateRequest;
 import com.cyx.paradegroundbackend.model.entity.LevelInfo;
 
@@ -23,4 +24,6 @@ public interface LevelInfoService extends IService<LevelInfo> {
     boolean updateLevelPriority(Long id, Integer priority);
 
     boolean deleteLevel(Long id);
+
+    IPage<LevelInfo> listFeaturedLevelByPage(PageRequest pageRequest);
 }

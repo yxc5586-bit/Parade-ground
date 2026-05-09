@@ -1,11 +1,13 @@
 package com.cyx.paradegroundbackend.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cyx.paradegroundbackend.common.BaseResponse;
 import com.cyx.paradegroundbackend.common.ErrorCode;
 import com.cyx.paradegroundbackend.common.PageResponse;
 import com.cyx.paradegroundbackend.common.ResultUtils;
 import com.cyx.paradegroundbackend.constant.UserConstant;
 import com.cyx.paradegroundbackend.exception.BusinessException;
+import com.cyx.paradegroundbackend.model.dto.common.PageRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelGenerateRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelQueryRequest;
 import com.cyx.paradegroundbackend.model.dto.level.LevelUpdateRequest;
@@ -22,6 +24,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -109,6 +112,18 @@ public class LevelController {
             return ResultUtils.success(null);
         }
         return ResultUtils.success(LevelQuestionVO.fromEntity(levelInfo));
+    }
+
+    @GetMapping("/featured/page")
+    @Operation(summary = "分页获取精选关卡", description = "分页获取优先级 >= 999 的精选关卡列表")
+    public BaseResponse<PageResponse<LevelQuestionVO>> listFeaturedLevelByPage(PageRequest pageRequest,
+                                                                               HttpServletRequest request) {
+        userInfoService.getCurrentUser(request);
+        IPage<LevelInfo> page = levelInfoService.listFeaturedLevelByPage(pageRequest);
+        List<LevelQuestionVO> records = page.getRecords().stream()
+                .map(LevelQuestionVO::fromEntity)
+                .toList();
+        return ResultUtils.success(PageResponse.of(page, records));
     }
 
     @GetMapping("/admin/list")

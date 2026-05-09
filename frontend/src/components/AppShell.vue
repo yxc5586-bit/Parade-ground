@@ -21,6 +21,7 @@
       </nav>
 
       <div class="user-box" v-if="state.user">
+        <div class="user-avatar" :class="avatarClass" :style="avatarStyle">{{ avatarClass.includes('default') ? userInitial : '' }}</div>
         <div class="user-meta">
           <strong>{{ state.user.userName || state.user.userAccount }}</strong>
           <span>{{ rank }} · {{ formatSalary(state.user.currentSalary) }}</span>
@@ -36,6 +37,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { HomeFilled, SwitchButton, Tickets } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
@@ -45,6 +47,27 @@ import { formatSalary } from '../utils/format'
 
 const router = useRouter()
 const { state, rank, clearUser } = useUser()
+
+const userInitial = computed(() => {
+  const name = state.user?.userName || state.user?.userAccount || ''
+  return name.charAt(0).toUpperCase()
+})
+
+const avatarClass = computed(() => {
+  const avatar = state.user?.userAvatar
+  if (!avatar || /^[0-3]$/.test(avatar)) {
+    return `avatar-default avatar-default--${avatar || '0'}`
+  }
+  return 'avatar-custom'
+})
+
+const avatarStyle = computed(() => {
+  const avatar = state.user?.userAvatar
+  if (avatar && !/^[0-3]$/.test(avatar)) {
+    return { backgroundImage: `url(${avatar})` }
+  }
+  return {}
+})
 
 async function handleLogout() {
   await userApi.logout()
@@ -143,6 +166,40 @@ async function handleLogout() {
   justify-self: end;
   align-items: center;
   gap: 12px;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.avatar-default--0 {
+  background: linear-gradient(135deg, #d99a3d, #e6d0a3);
+}
+
+.avatar-default--1 {
+  background: linear-gradient(135deg, #3b82f6, #67e8f9);
+}
+
+.avatar-default--2 {
+  background: linear-gradient(135deg, #22c55e, #86efac);
+}
+
+.avatar-default--3 {
+  background: linear-gradient(135deg, #a855f7, #d8b4fe);
+}
+
+.avatar-custom {
+  background-size: cover;
+  background-position: center;
 }
 
 .user-meta {

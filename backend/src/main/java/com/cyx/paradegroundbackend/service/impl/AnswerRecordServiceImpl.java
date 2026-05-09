@@ -73,6 +73,12 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
     @Value("${langchain4j.open-ai.chat-model.api-key:}")
     private String openRouterApiKey;
 
+    @Value("${langchain4j.open-ai.chat-model.model-name:}")
+    private String openRouterModelName;
+
+    @Value("${langchain4j.open-ai.chat-model.timeout:}")
+    private String openRouterTimeout;
+
     @Override
     public Long addAnswerRecord(AnswerRecordAddRequest answerRecordAddRequest) {
         if (answerRecordAddRequest == null) {
@@ -170,7 +176,11 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
             aiJudgeResult = answerJudgeAiService.judgeAnswer(jsonCodec.toJson(aiRequest));
         } catch (Exception e) {
             log.error("OpenRouter answer judging failed, userId={}, levelId={}", userId, gameSubmitRequest.getLevelId(), e);
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "AI answer judging failed: " + e.getMessage());
+            throw new BusinessException(
+                    ErrorCode.OPERATION_ERROR,
+                    buildAiFailureMessage("AI answer judging failed", e),
+                    e
+            );
         }
 
         AiJudgeResult sanitizedResult = sanitizeJudgeResult(
@@ -275,10 +285,10 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                                               List<String> correctOptionIds, List<String> selectedOptionIds,
                                               AiLevelRequirement requirement) {
         List<String> normalizedSelectedIds = normalizeOptionIds(selectedOptionIds);
-        int fallbackScore = calculateFallbackScore(normalizedSelectedIds, correctOptionIds);
-        int score = clampScore(aiJudgeResult == null ? fallbackScore : defaultIfNull(aiJudgeResult.getScore(), fallbackScore));
-        int salaryChange = calculateSalaryChange(score);
-        int updatedSalary = Math.max(1000, currentSalary + salaryChange);
+        int baseSalary = defaultIfNull(currentSalary, UserConstant.INIT_SALARY);
+        int score = calculateFallbackScore(normalizedSelectedIds, correctOptionIds);
+        int salaryChange = calculateSalaryChange(score, baseSalary);
+        int updatedSalary = Math.max(1000, baseSalary + salaryChange);
 
         AiJudgeResult sanitizedResult = new AiJudgeResult();
         sanitizedResult.setScore(score);
@@ -312,10 +322,7 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
         long hitCount = selectedSet.stream().filter(correctSet::contains).count();
         double precision = (double) hitCount / selectedSet.size();
         double recall = (double) hitCount / correctSet.size();
-        if (precision + recall == 0) {
-            return 0;
-        }
-        return (int) Math.round(100 * (2 * precision * recall) / (precision + recall));
+        return clampScore((int) Math.round(100 * precision * recall));
     }
 
     private int clampScore(Integer score) {
@@ -329,26 +336,44 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
         return value == null ? defaultValue : value;
     }
 
-    private int calculateSalaryChange(int score) {
-        if (score >= 90) {
-            return 2000;
+    private int calculateSalaryChange(int score, int currentSalary) {
+        int normalizedScore = clampScore(score);
+        int baseChange;
+        if (normalizedScore >= 90) {
+            baseChange = interpolate(normalizedScore, 90, 100, 500, 2000);
+        } else if (normalizedScore >= 80) {
+            baseChange = interpolate(normalizedScore, 80, 89, 200, 800);
+        } else if (normalizedScore >= 70) {
+            baseChange = interpolate(normalizedScore, 70, 79, 0, 300);
+        } else if (normalizedScore >= 60) {
+            baseChange = interpolate(normalizedScore, 60, 69, -500, -200);
+        } else if (normalizedScore >= 50) {
+            baseChange = interpolate(normalizedScore, 50, 59, -1000, -500);
+        } else {
+            baseChange = interpolate(normalizedScore, 0, 49, -2000, -1000);
         }
-        if (score >= 80) {
-            return 1500;
+        return (int) Math.round(baseChange * resolveSalaryFactor(currentSalary));
+    }
+
+    private int interpolate(int score, int minScore, int maxScore, int minChange, int maxChange) {
+        if (maxScore == minScore) {
+            return minChange;
         }
-        if (score >= 70) {
-            return 800;
+        double ratio = (double) (score - minScore) / (maxScore - minScore);
+        return (int) Math.round(minChange + (maxChange - minChange) * ratio);
+    }
+
+    private double resolveSalaryFactor(int currentSalary) {
+        if (currentSalary < 10000) {
+            return 0.8;
         }
-        if (score >= 60) {
-            return 300;
+        if (currentSalary < 20000) {
+            return 1.0;
         }
-        if (score >= 50) {
-            return 0;
+        if (currentSalary <= 30000) {
+            return 1.2;
         }
-        if (score >= 35) {
-            return -500;
-        }
-        return -1000;
+        return 1.5;
     }
 
     private String sanitizeOrDefaultTitle(String title, int score) {
@@ -516,6 +541,61 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                 .map(String::toUpperCase)
                 .distinct()
                 .toList();
+    }
+
+    private String buildAiFailureMessage(String prefix, Exception exception) {
+        String rootCauseMessage = extractRootCauseMessage(exception);
+        String causeMessages = collectCauseMessages(exception);
+        if (causeMessages.contains("Error while extracting response for type [java.lang.String]")
+                && causeMessages.contains("closed")) {
+            return prefix + ": OpenRouter closed the response while the backend was reading it. "
+                    + "This usually means the model response took too long or was too large for the current synchronous request. "
+                    + "Current model=" + readableConfigValue(openRouterModelName, "unknown")
+                    + ", timeout=" + readableConfigValue(openRouterTimeout, "unknown")
+                    + ". Use a faster OPENROUTER_MODEL_NAME or increase OPENROUTER_TIMEOUT.";
+        }
+        if (causeMessages.contains("Unexpected end-of-input")) {
+            return prefix + ": AI returned incomplete JSON. Increase OPENROUTER_MAX_TOKENS or reduce the generated response size.";
+        }
+        if (causeMessages.contains("Error while extracting response for type [java.lang.String]")
+                && causeMessages.contains("content type [application/json]")) {
+            return prefix + ": OpenRouter returned an error response. Please check whether OPENROUTER_API_KEY is valid, "
+                    + "the account has available credits, the model "
+                    + readableConfigValue(openRouterModelName, "unknown")
+                    + " is accessible, or the request was rate-limited.";
+        }
+        return prefix + ": " + rootCauseMessage;
+    }
+
+    private String collectCauseMessages(Throwable throwable) {
+        StringBuilder messages = new StringBuilder();
+        Throwable current = throwable;
+        while (current != null) {
+            if (StringUtils.hasText(current.getMessage())) {
+                if (!messages.isEmpty()) {
+                    messages.append(" | ");
+                }
+                messages.append(current.getMessage().trim());
+            }
+            current = current.getCause();
+        }
+        return messages.toString();
+    }
+
+    private String extractRootCauseMessage(Throwable throwable) {
+        Throwable current = throwable;
+        String message = null;
+        while (current != null) {
+            if (StringUtils.hasText(current.getMessage())) {
+                message = current.getMessage().trim();
+            }
+            current = current.getCause();
+        }
+        return StringUtils.hasText(message) ? message : "Unknown AI service error";
+    }
+
+    private String readableConfigValue(String value, String defaultValue) {
+        return StringUtils.hasText(value) ? value.trim() : defaultValue;
     }
 
     private List<String> validateSelectedOptionIds(List<String> selectedOptionIds, List<AiLevelOption> options) {

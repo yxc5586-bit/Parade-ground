@@ -69,6 +69,12 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
     @Value("${langchain4j.open-ai.chat-model.api-key:}")
     private String openRouterApiKey;
 
+    @Value("${langchain4j.open-ai.chat-model.model-name:}")
+    private String openRouterModelName;
+
+    @Value("${langchain4j.open-ai.chat-model.timeout:}")
+    private String openRouterTimeout;
+
     @Override
     public Long addLevel(LevelAddRequest levelAddRequest) {
         if (levelAddRequest == null) {
@@ -171,7 +177,11 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
             aiGeneratedLevel = levelGenerationAiService.generateLevel(jsonCodec.toJson(aiRequest));
         } catch (Exception e) {
             log.error("OpenRouter level generation failed, userId={}, currentSalary={}", userId, currentSalary, e);
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "AI level generation failed: " + e.getMessage());
+            throw new BusinessException(
+                    ErrorCode.OPERATION_ERROR,
+                    buildAiFailureMessage("AI level generation failed", e),
+                    e
+            );
         }
 
         AiGeneratedLevel sanitizedLevel = sanitizeGeneratedLevel(aiGeneratedLevel, currentSalary, levelGenerateRequest);
@@ -481,6 +491,61 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
             return "expert";
         }
         return "platform";
+    }
+
+    private String buildAiFailureMessage(String prefix, Exception exception) {
+        String rootCauseMessage = extractRootCauseMessage(exception);
+        String causeMessages = collectCauseMessages(exception);
+        if (causeMessages.contains("Error while extracting response for type [java.lang.String]")
+                && causeMessages.contains("closed")) {
+            return prefix + ": OpenRouter closed the response while the backend was reading it. "
+                    + "This usually means the model response took too long or was too large for the current synchronous request. "
+                    + "Current model=" + readableConfigValue(openRouterModelName, "unknown")
+                    + ", timeout=" + readableConfigValue(openRouterTimeout, "unknown")
+                    + ". Use a faster OPENROUTER_MODEL_NAME or increase OPENROUTER_TIMEOUT.";
+        }
+        if (causeMessages.contains("Unexpected end-of-input")) {
+            return prefix + ": AI returned incomplete JSON. Increase OPENROUTER_MAX_TOKENS or reduce the generated level size.";
+        }
+        if (causeMessages.contains("Error while extracting response for type [java.lang.String]")
+                && causeMessages.contains("content type [application/json]")) {
+            return prefix + ": OpenRouter returned an error response. Please check whether OPENROUTER_API_KEY is valid, "
+                    + "the account has available credits, the model "
+                    + readableConfigValue(openRouterModelName, "unknown")
+                    + " is accessible, or the request was rate-limited.";
+        }
+        return prefix + ": " + rootCauseMessage;
+    }
+
+    private String collectCauseMessages(Throwable throwable) {
+        StringBuilder messages = new StringBuilder();
+        Throwable current = throwable;
+        while (current != null) {
+            if (StringUtils.hasText(current.getMessage())) {
+                if (!messages.isEmpty()) {
+                    messages.append(" | ");
+                }
+                messages.append(current.getMessage().trim());
+            }
+            current = current.getCause();
+        }
+        return messages.toString();
+    }
+
+    private String extractRootCauseMessage(Throwable throwable) {
+        Throwable current = throwable;
+        String message = null;
+        while (current != null) {
+            if (StringUtils.hasText(current.getMessage())) {
+                message = current.getMessage().trim();
+            }
+            current = current.getCause();
+        }
+        return StringUtils.hasText(message) ? message : "Unknown AI service error";
+    }
+
+    private String readableConfigValue(String value, String defaultValue) {
+        return StringUtils.hasText(value) ? value.trim() : defaultValue;
     }
 
     private void validateLevelFields(String levelId, String levelName, String difficulty, String salaryRange,

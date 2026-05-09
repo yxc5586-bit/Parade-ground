@@ -13,11 +13,11 @@ langchain4j:
   open-ai:
     chat-model:
       api-key: ${OPENROUTER_API_KEY:}
-      base-url: https://openrouter.ai/api/v1
-      model-name: qwen/qwen3-235b-a22b-2507
-      temperature: 0.2
-      max-tokens: 4096
-      timeout: 60s
+      base-url: ${OPENROUTER_BASE_URL:https://openrouter.ai/api/v1}
+      model-name: ${OPENROUTER_MODEL_NAME:qwen/qwen-plus}
+      temperature: ${OPENROUTER_TEMPERATURE:0.2}
+      max-tokens: ${OPENROUTER_MAX_TOKENS:4096}
+      timeout: ${OPENROUTER_TIMEOUT:180s}
       max-retries: 0
 
 server:

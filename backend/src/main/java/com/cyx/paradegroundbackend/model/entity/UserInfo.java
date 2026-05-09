@@ -27,6 +27,8 @@ public class UserInfo implements Serializable {
 
     private Integer currentSalary;
 
+    private String userAvatar;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

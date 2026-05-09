@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS user_info (
   userPassword VARCHAR(255) NOT NULL COMMENT 'User password',
   userName VARCHAR(64) NOT NULL DEFAULT 'coder_player' COMMENT 'User name',
   currentSalary INT NOT NULL DEFAULT 10000 COMMENT 'Current monthly salary',
+  userAvatar VARCHAR(512) NULL COMMENT 'User avatar URL, NULL means use default',
   createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create time',
   updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update time',
   isDelete TINYINT NOT NULL DEFAULT 0 COMMENT 'Logic delete flag',
@@ -55,3 +56,6 @@ CREATE TABLE IF NOT EXISTS answer_record (
   KEY idx_userId_levelId (userId, levelId),
   KEY idx_levelId (levelId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Answer record table';
+
+
+ALTER TABLE user_info ADD COLUMN userAvatar VARCHAR(255) NULL COMMENT 'User avatar URL, NULL means use default';

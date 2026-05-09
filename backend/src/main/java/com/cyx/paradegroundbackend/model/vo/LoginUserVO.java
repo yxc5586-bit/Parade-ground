@@ -21,11 +21,16 @@ public class LoginUserVO implements Serializable {
 
     private Integer currentSalary;
 
+    private String userAvatar;
+
     private LocalDateTime createTime;
 
     public static LoginUserVO fromEntity(UserInfo userInfo) {
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(userInfo, loginUserVO);
+        if (loginUserVO.getUserAvatar() == null || loginUserVO.getUserAvatar().isEmpty()) {
+            loginUserVO.setUserAvatar(String.valueOf(userInfo.getId() % 4));
+        }
         return loginUserVO;
     }
 }

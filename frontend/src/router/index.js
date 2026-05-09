@@ -29,6 +29,12 @@ const routes = [
     component: () => import('../views/RecordsView.vue'),
   },
   {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/AdminView.vue'),
+    meta: { admin: true },
+  },
+  {
     path: '/loading',
     name: 'loading',
     component: () => import('../views/LoadingView.vue'),
@@ -63,6 +69,10 @@ router.beforeEach(async (to) => {
       name: 'login',
       query: { redirect: to.fullPath },
     }
+  }
+
+  if (to.meta.admin && state.user.userRole !== 'admin') {
+    return '/'
   }
 
   return true

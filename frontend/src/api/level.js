@@ -12,4 +12,20 @@ export const levelApi = {
   current(config = {}) {
     return http.get('/level/current', config)
   },
+
+  // Admin
+  adminList(params = {}) {
+    return http.get('/level/admin/list', { params })
+  },
+  adminUpdate(data) {
+    return http.put('/level/admin/update', data)
+  },
+  adminDelete(id) {
+    return http.delete(`/level/admin/${id}`)
+  },
+  adminSetPriority(id, priority) {
+    return http.put('/level/admin/priority', null, {
+      params: { id, priority },
+    })
+  },
 }

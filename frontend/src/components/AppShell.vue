@@ -18,6 +18,10 @@
           <el-icon><Tickets /></el-icon>
           战绩
         </router-link>
+        <router-link v-if="state.user?.userRole === 'admin'" to="/admin">
+          <el-icon><Setting /></el-icon>
+          管理
+        </router-link>
       </nav>
 
       <div class="user-box" v-if="state.user">
@@ -38,7 +42,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { HomeFilled, SwitchButton, Tickets } from '@element-plus/icons-vue'
+import { HomeFilled, Setting, SwitchButton, Tickets } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { userApi } from '../api/user'

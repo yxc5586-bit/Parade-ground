@@ -50,6 +50,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+/**
+ * 作答记录服务实现 — 核心模块：
+ * 1. 答案提交（submitAnswer）：组装AI评审请求 → 调用OpenRouter判题 → 计算得分 → 薪资结算 → 入库
+ * 2. 得分计算：基于precision/recall的F1-style评分算法，结合薪资档位计算薪资变化
+ * 3. 容错兜底：AI返回异常时，使用本地规则计算得分并生成默认评价内容
+ * 4. 公司名混淆：所有AI产出文本通过CompanyAliasSanitizer替换真实公司名
+ */
 @Service
 public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, AnswerRecord> implements AnswerRecordService {
 

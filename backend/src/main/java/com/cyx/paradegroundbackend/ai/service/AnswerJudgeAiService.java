@@ -6,6 +6,7 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import dev.langchain4j.service.spring.AiService;
 
+/** AI答案评审服务 — 使用LangChain4j调用OpenRouter，根据答案和标准答案评审并生成薪资建议 */
 @AiService
 public interface AnswerJudgeAiService {
 

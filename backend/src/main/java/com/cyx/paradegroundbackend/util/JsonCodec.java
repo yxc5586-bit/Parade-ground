@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+/** JSON编解码工具 — 统一序列化/反序列化，基于Spring管理的ObjectMapper，失败时抛出BusinessException */
 @Component
 public class JsonCodec {
 

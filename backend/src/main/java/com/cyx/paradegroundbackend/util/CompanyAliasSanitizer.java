@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/** 公司名混淆工具 — 将AI生成内容中的真实公司名替换为虚构别名，避免直接提及真实企业 */
 @Component
 public class CompanyAliasSanitizer {
 

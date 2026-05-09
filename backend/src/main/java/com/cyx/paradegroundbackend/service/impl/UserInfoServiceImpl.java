@@ -16,6 +16,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * 用户服务实现 — 处理注册（MD5+盐密码加密）、登录（Session存储userId）、注销（销毁Session）、获取当前用户。
+ * 新用户默认月薪 10000，角色默认为 user。
+ */
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 

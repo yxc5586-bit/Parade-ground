@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+/** 登录用户VO — 返回给前端的安全用户信息，不含密码，头像默认按userId%4分配四种默认色 */
 @Data
 public class LoginUserVO implements Serializable {
 

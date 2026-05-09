@@ -47,6 +47,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * 关卡服务实现 — 核心模块：
+ * 1. AI关卡生成：根据用户薪资、历史战绩、偏好方向构建AI请求，调用OpenRouter生成关卡并入库
+ * 2. 关卡CRUD：增删改查，含字段校验
+ * 3. 分页查询：管理员列表查询 + 精选关卡查询（priority >= 999）
+ * 4. 公司名混淆：产出内容通过CompanyAliasSanitizer替换真实公司名
+ */
 @Service
 public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo> implements LevelInfoService {
 

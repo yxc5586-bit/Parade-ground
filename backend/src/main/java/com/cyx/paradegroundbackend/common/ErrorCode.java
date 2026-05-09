@@ -2,6 +2,7 @@ package com.cyx.paradegroundbackend.common;
 
 import lombok.Getter;
 
+/** 统一错误码枚举 — code在40000-50002区间，前端根据code做不同处理（如40100跳登录） */
 @Getter
 public enum ErrorCode {
 

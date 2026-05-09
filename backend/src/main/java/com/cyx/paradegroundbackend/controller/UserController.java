@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 用户接口 — 处理注册、登录（Session机制）、注销以及获取当前登录用户信息。
+ */
 @RestController
 @RequestMapping("/user")
 @Tag(name = "用户接口", description = "用户注册、登录、注销和当前用户信息相关接口")

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** 关卡生成结果VO — 返回生成后关卡ID、状态、是否为新生成 */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -36,11 +36,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 闯关接口 — 负责用户提交答案、查看战绩，答题流程通过 GameSubmitRequest → AI评审 → AnswerRecord 完成闭环。
+ */
 @RestController
 @RequestMapping("/game")
 @Tag(name = "闯关接口", description = "提交答案和历史战绩相关接口")
 public class GameController {
 
+    /** Session key：当前进行中的关卡ID */
     private static final String CURRENT_LEVEL_ID = "current_level_id";
 
     @Resource

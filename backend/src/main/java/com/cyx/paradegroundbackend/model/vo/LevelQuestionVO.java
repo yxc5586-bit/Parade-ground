@@ -7,6 +7,10 @@ import java.io.Serializable;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
+/**
+ * 关卡题面VO — 前端答题页使用的完整关卡数据，将JSON字符串字段解析为Object返回。
+ * 同时被精选关卡列表页复用（列表场景下前端可忽略requirement/options字段）。
+ */
 @Data
 public class LevelQuestionVO implements Serializable {
 

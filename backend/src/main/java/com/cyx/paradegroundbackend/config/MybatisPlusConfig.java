@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/** MyBatis-Plus配置 — 注册分页插件（MySQL方言），扫描Mapper接口 */
 @Configuration
 @MapperScan("com.cyx.paradegroundbackend.mapper")
 public class MybatisPlusConfig {

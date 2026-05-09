@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** 统一响应体 — 前端http拦截器按code===0判断成功，其余为错误 */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

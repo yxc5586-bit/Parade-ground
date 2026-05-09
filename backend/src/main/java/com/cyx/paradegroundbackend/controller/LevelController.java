@@ -37,11 +37,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 关卡接口 — 关卡生成（AI）、当前关卡查询、关卡详情、精选关卡分页、以及管理员CRUD。
+ * 生成流程：检查是否有进行中的关卡 → 调用AI生成 → 存库 → 写入Session
+ */
 @RestController
 @RequestMapping("/level")
 @Tag(name = "关卡接口", description = "关卡生成、当前题目和题面详情相关接口")
 public class LevelController {
 
+    /** Session key：当前进行中的关卡ID */
     private static final String CURRENT_LEVEL_ID = "current_level_id";
 
     @Resource

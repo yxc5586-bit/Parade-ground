@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/** 全局异常处理器 — 捕获BusinessException和RuntimeException，统一包装为BaseResponse返回 */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

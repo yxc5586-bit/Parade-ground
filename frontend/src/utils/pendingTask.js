@@ -1,3 +1,4 @@
+// 待办任务机制 — 将耗时操作（AI生成关卡、评审答案）包装为任务存入sessionStorage，LoadingView消费后跳转结果页
 const STORAGE_PREFIX = 'parade-ground:pending-task:'
 
 function buildTaskId() {

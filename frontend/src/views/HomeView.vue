@@ -1,3 +1,4 @@
+<!-- 首页/营门 — 展示用户战力面板、进行中关卡、最近战绩，提供AI生成关卡和精选战役入口 -->
 <template>
   <div class="page home-page">
     <section class="command-band">

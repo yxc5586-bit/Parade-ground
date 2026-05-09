@@ -1,3 +1,4 @@
+<!-- 答题页 — 左侧展示产品需求文档，右侧为候选选项池和答题区，支持拖拽/点击选方案，提交后进入AI评审 -->
 <template>
   <div class="page challenge-page" v-loading="loading">
     <section v-if="level" class="challenge-head">

@@ -1,3 +1,4 @@
+// 路由配置 — 全部路由懒加载，beforeEach守卫检查登录态：非公开页面未登录跳/login，管理员页面校验角色
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUser } from '../composables/useUser'
 

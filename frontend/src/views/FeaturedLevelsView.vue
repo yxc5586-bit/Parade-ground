@@ -1,3 +1,4 @@
+<!-- 精选关卡选择页 — 分页网格展示priority>=999的精选关卡，用户点击直接进入挑战，无需AI生成 -->
 <template>
   <div class="page featured-page">
     <section class="featured-panel">

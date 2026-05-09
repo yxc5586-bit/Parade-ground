@@ -1,3 +1,4 @@
+/* 全局样式 — CSS变量定义暗金主题色板、Element Plus组件覆色、通用布局类(page/section/metric等) */
 :root {
   --bg: #1f160f;
   --panel: rgba(62, 40, 22, 0.88);

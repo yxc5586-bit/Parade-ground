@@ -1,3 +1,4 @@
+// 关卡API — AI生成关卡、获取关卡详情/当前关卡、精选关卡分页、管理员CRUD
 import http from './http'
 
 export const levelApi = {

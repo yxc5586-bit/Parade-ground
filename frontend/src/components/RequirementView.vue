@@ -1,3 +1,4 @@
+<!-- 产品需求文档组件 — 渲染关卡requirement JSON，按字段名分块展示业务背景/目标/角色/规则等 -->
 <template>
   <div class="requirement">
     <article v-if="requirement.background">

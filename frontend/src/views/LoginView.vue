@@ -1,3 +1,4 @@
+<!-- 登录/注册页 — meta.public页面无AppShell壳，支持注册和登录两种模式切换 -->
 <template>
   <div class="login-page">
     <section class="login-copy">

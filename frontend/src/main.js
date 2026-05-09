@@ -1,3 +1,4 @@
+// 应用入口 — 挂载Vue实例，注册Element Plus组件库和Vue Router
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'

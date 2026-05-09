@@ -1,3 +1,4 @@
+<!-- 薪资徽章组件 — 在答题页顶部展示当前月薪，支持自定义label -->
 <template>
   <div class="salary-badge">
     <span>{{ label }}</span>

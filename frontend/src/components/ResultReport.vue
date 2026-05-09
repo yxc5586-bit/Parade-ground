@@ -1,3 +1,4 @@
+<!-- 评审报告组件 — 展示得分仪表盘、薪资变化、投递建议、命中/误选/遗漏分析、标准答案与Markdown解法 -->
 <template>
   <div class="report">
     <section class="report-top">

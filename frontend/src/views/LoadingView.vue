@@ -1,3 +1,4 @@
+<!-- 加载/中转页 — 消费pendingTask执行AI操作（生成关卡/评审答案），完成后自动跳转，失败展示错误提示 -->
 <template>
   <div class="page loading-page">
     <section class="loading-panel">

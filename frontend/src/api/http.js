@@ -1,3 +1,4 @@
+// HTTP客户端 — axios实例，baseURL=/api，响应拦截器按code===0判断成功，40100自动跳登录
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 

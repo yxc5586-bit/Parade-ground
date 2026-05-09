@@ -1,3 +1,4 @@
+<!-- 历史战绩页 — 分页展示用户所有作答记录，含得分、薪资变化、结算月薪，可点击查看详情 -->
 <template>
   <div class="page records-page">
     <section class="section">

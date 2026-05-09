@@ -1,3 +1,4 @@
+<!-- 管理员关卡管理页 — 筛选/分页查看所有关卡，支持编辑关卡信息、设置精选优先级、删除关卡 -->
 <template>
   <div class="admin-page">
     <div class="page-header">

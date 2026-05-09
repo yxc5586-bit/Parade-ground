@@ -1,3 +1,4 @@
+<!-- 结算报告页 — 展示AI评审得分、薪资变化、命中/误选/遗漏分析、标准答案与解法，以及投递建议 -->
 <template>
   <div class="page result-page" v-loading="loading">
     <template v-if="detail">

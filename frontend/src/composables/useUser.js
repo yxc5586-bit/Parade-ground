@@ -1,3 +1,4 @@
+// 用户状态管理 — 全局单例，管理登录用户、军阶计算、登录态校验
 import { computed, reactive } from 'vue'
 import { userApi } from '../api/user'
 

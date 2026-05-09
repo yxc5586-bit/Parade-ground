@@ -1,3 +1,4 @@
+// 闯关API — 提交答案、分页查询战绩、查看战绩详情
 import http from './http'
 
 export const gameApi = {

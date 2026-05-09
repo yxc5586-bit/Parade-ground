@@ -1,3 +1,4 @@
+// 用户API — 注册、登录、注销、获取当前登录用户信息
 import http from './http'
 
 export const userApi = {

@@ -1,3 +1,4 @@
+<!-- 应用外壳布局 — 顶部导航栏（品牌/导航/用户信息/退出）+ 主内容区，sticky顶部栏 -->
 <template>
   <div class="shell">
     <header class="topbar">

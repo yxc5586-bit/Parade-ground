@@ -1,3 +1,4 @@
+// 格式化工具函数集 — 薪资格式化、日期格式化、耗时格式化、数组标准化、选项标准化
 export function formatSalary(value) {
   const amount = Number(value || 0)
   return `¥${amount.toLocaleString('zh-CN')}/月`

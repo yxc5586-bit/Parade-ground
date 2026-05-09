@@ -35,4 +35,14 @@ public class PageResponse<T> implements Serializable {
                 page.getPages()
         );
     }
+
+    public static <T> PageResponse<T> fromPage(IPage<T> page) {
+        return new PageResponse<>(
+                page.getRecords(),
+                page.getTotal(),
+                page.getCurrent(),
+                page.getSize(),
+                page.getPages()
+        );
+    }
 }

@@ -156,7 +156,8 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
         queryWrapper.like(StringUtils.hasText(queryRequest.getLevelName()), LevelInfo::getLevelName, queryRequest.getLevelName());
         queryWrapper.eq(StringUtils.hasText(queryRequest.getDifficulty()), LevelInfo::getDifficulty, queryRequest.getDifficulty());
         queryWrapper.eq(StringUtils.hasText(queryRequest.getSalaryRange()), LevelInfo::getSalaryRange, queryRequest.getSalaryRange());
-        queryWrapper.orderByDesc(LevelInfo::getCreateTime);
+        queryWrapper.eq(queryRequest.getPriority() != null, LevelInfo::getPriority, queryRequest.getPriority());
+        queryWrapper.orderByDesc(LevelInfo::getPriority).orderByDesc(LevelInfo::getId);
         return this.page(new Page<>(current, pageSize), queryWrapper);
     }
 
@@ -546,6 +547,31 @@ public class LevelInfoServiceImpl extends ServiceImpl<LevelInfoMapper, LevelInfo
 
     private String readableConfigValue(String value, String defaultValue) {
         return StringUtils.hasText(value) ? value.trim() : defaultValue;
+    }
+
+    @Override
+    public boolean updateLevelPriority(Long id, Integer priority) {
+        if (id == null || priority == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        LevelInfo levelInfo = this.getById(id);
+        if (levelInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "Level not found");
+        }
+        levelInfo.setPriority(priority);
+        return this.updateById(levelInfo);
+    }
+
+    @Override
+    public boolean deleteLevel(Long id) {
+        if (id == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        LevelInfo levelInfo = this.getById(id);
+        if (levelInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "Level not found");
+        }
+        return this.removeById(id);
     }
 
     private void validateLevelFields(String levelId, String levelName, String difficulty, String salaryRange,

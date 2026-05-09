@@ -23,6 +23,8 @@ public class LoginUserVO implements Serializable {
 
     private String userAvatar;
 
+    private String userRole;
+
     private LocalDateTime createTime;
 
     public static LoginUserVO fromEntity(UserInfo userInfo) {

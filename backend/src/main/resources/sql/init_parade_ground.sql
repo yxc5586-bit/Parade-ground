@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS user_info (
   userName VARCHAR(64) NOT NULL DEFAULT 'coder_player' COMMENT 'User name',
   currentSalary INT NOT NULL DEFAULT 10000 COMMENT 'Current monthly salary',
   userAvatar VARCHAR(512) NULL COMMENT 'User avatar URL, NULL means use default',
+  userRole VARCHAR(16) NOT NULL DEFAULT 'user' COMMENT 'User role: user/admin',
   createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create time',
   updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update time',
   isDelete TINYINT NOT NULL DEFAULT 0 COMMENT 'Logic delete flag',
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS level_info (
   options TEXT NOT NULL COMMENT 'Option list JSON or text',
   correctOptionIds TEXT NOT NULL COMMENT 'Correct option id list JSON or text',
   analysisDirection TEXT NULL COMMENT 'Analysis direction',
+  priority INT NOT NULL DEFAULT 0 COMMENT 'Priority: 0=normal, 99=elevated, 999=featured, 9999=pinned',
   createTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create time',
   updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update time',
   isDelete TINYINT NOT NULL DEFAULT 0 COMMENT 'Logic delete flag',
@@ -59,3 +61,5 @@ CREATE TABLE IF NOT EXISTS answer_record (
 
 
 ALTER TABLE user_info ADD COLUMN userAvatar VARCHAR(255) NULL COMMENT 'User avatar URL, NULL means use default';
+ALTER TABLE user_info ADD COLUMN userRole VARCHAR(16) NOT NULL DEFAULT 'user' COMMENT 'User role: user/admin';
+ALTER TABLE level_info ADD COLUMN priority INT NOT NULL DEFAULT 0 COMMENT 'Priority: 0=normal, 99=elevated, 999=featured, 9999=pinned';

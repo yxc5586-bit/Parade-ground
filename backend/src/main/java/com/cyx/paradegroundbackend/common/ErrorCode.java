@@ -11,7 +11,8 @@ public enum ErrorCode {
     NOT_FOUND_ERROR(40400, "数据不存在"),
     OPERATION_ERROR(50000, "操作失败"),
     SYSTEM_ERROR(50001, "系统内部异常"),
-    NOT_IMPLEMENTED_ERROR(50002, "功能暂未实现");
+    NOT_IMPLEMENTED_ERROR(50002, "功能暂未实现"),
+    NO_AUTH_ERROR(40300, "无权限");
 
     private final int code;
 

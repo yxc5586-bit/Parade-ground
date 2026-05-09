@@ -2,9 +2,13 @@ package com.cyx.paradegroundbackend.controller;
 
 import com.cyx.paradegroundbackend.common.BaseResponse;
 import com.cyx.paradegroundbackend.common.ErrorCode;
+import com.cyx.paradegroundbackend.common.PageResponse;
 import com.cyx.paradegroundbackend.common.ResultUtils;
+import com.cyx.paradegroundbackend.constant.UserConstant;
 import com.cyx.paradegroundbackend.exception.BusinessException;
 import com.cyx.paradegroundbackend.model.dto.level.LevelGenerateRequest;
+import com.cyx.paradegroundbackend.model.dto.level.LevelQueryRequest;
+import com.cyx.paradegroundbackend.model.dto.level.LevelUpdateRequest;
 import com.cyx.paradegroundbackend.model.entity.AnswerRecord;
 import com.cyx.paradegroundbackend.model.entity.LevelInfo;
 import com.cyx.paradegroundbackend.model.vo.LevelGenerateVO;
@@ -20,8 +24,11 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,6 +109,44 @@ public class LevelController {
             return ResultUtils.success(null);
         }
         return ResultUtils.success(LevelQuestionVO.fromEntity(levelInfo));
+    }
+
+    @GetMapping("/admin/list")
+    @Operation(summary = "管理员分页查询关卡列表", description = "管理员按条件分页查询所有关卡，按优先级降序排列")
+    public BaseResponse<PageResponse<LevelInfo>> adminListLevelByPage(LevelQueryRequest levelQueryRequest,
+                                                                      HttpServletRequest request) {
+        checkAdmin(request);
+        return ResultUtils.success(PageResponse.fromPage(levelInfoService.listLevelByPage(levelQueryRequest)));
+    }
+
+    @PutMapping("/admin/update")
+    @Operation(summary = "管理员更新关卡", description = "管理员根据 id 更新关卡信息，支持设置优先级")
+    public BaseResponse<Boolean> adminUpdateLevel(@RequestBody LevelUpdateRequest levelUpdateRequest,
+                                                  HttpServletRequest request) {
+        checkAdmin(request);
+        return ResultUtils.success(levelInfoService.updateLevel(levelUpdateRequest));
+    }
+
+    @DeleteMapping("/admin/{id}")
+    @Operation(summary = "管理员删除关卡", description = "管理员根据主键 id 逻辑删除关卡")
+    public BaseResponse<Boolean> adminDeleteLevel(@PathVariable Long id, HttpServletRequest request) {
+        checkAdmin(request);
+        return ResultUtils.success(levelInfoService.deleteLevel(id));
+    }
+
+    @PutMapping("/admin/priority")
+    @Operation(summary = "管理员设置关卡优先级", description = "管理员设置关卡优先级：0=普通, 99=提升, 999=精选, 9999=置顶")
+    public BaseResponse<Boolean> adminSetPriority(@RequestParam Long id, @RequestParam Integer priority,
+                                                  HttpServletRequest request) {
+        checkAdmin(request);
+        return ResultUtils.success(levelInfoService.updateLevelPriority(id, priority));
+    }
+
+    private void checkAdmin(HttpServletRequest request) {
+        LoginUserVO loginUserVO = userInfoService.getCurrentUser(request);
+        if (!UserConstant.ROLE_ADMIN.equals(loginUserVO.getUserRole())) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "需要管理员权限");
+        }
     }
 
     private void validateLevelOwnership(Long userId, HttpServletRequest request, String levelId) {

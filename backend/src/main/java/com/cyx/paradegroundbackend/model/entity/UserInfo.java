@@ -29,6 +29,8 @@ public class UserInfo implements Serializable {
 
     private String userAvatar;
 
+    private String userRole;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

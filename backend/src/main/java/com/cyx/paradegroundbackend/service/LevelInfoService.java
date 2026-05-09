@@ -19,4 +19,8 @@ public interface LevelInfoService extends IService<LevelInfo> {
     IPage<LevelInfo> listLevelByPage(LevelQueryRequest levelQueryRequest);
 
     LevelInfo generateLevel(Long userId, Integer currentSalary, LevelGenerateRequest levelGenerateRequest);
+
+    boolean updateLevelPriority(Long id, Integer priority);
+
+    boolean deleteLevel(Long id);
 }

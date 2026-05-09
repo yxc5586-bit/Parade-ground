@@ -19,4 +19,6 @@ public class LevelQueryRequest extends PageRequest {
     private String difficulty;
 
     private String salaryRange;
+
+    private Integer priority;
 }

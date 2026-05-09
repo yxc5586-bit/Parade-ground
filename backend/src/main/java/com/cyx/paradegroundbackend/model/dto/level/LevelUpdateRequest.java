@@ -29,4 +29,6 @@ public class LevelUpdateRequest implements Serializable {
     private String correctOptionIds;
 
     private String analysisDirection;
+
+    private Integer priority;
 }

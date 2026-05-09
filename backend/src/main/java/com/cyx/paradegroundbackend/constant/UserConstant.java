@@ -7,4 +7,8 @@ public interface UserConstant {
     int INIT_SALARY = 10000;
 
     String PASSWORD_SALT = "parade-ground-salt";
+
+    String ROLE_USER = "user";
+
+    String ROLE_ADMIN = "admin";
 }

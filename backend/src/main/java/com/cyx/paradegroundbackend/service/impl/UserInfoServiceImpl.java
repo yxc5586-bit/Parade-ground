@@ -51,6 +51,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 ? userRegisterRequest.getUserName()
                 : "coder_player");
         userInfo.setCurrentSalary(UserConstant.INIT_SALARY);
+        userInfo.setUserRole(UserConstant.ROLE_USER);
         boolean saved = this.save(userInfo);
         if (!saved) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "注册失败");

@@ -37,6 +37,8 @@ public class LevelInfo implements Serializable {
 
     private String analysisDirection;
 
+    private Integer priority;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

@@ -30,8 +30,8 @@
       </div>
 
       <div class="panel-foot">
-        <el-pagination
-          v-model:current-page="page.current"
+        <Pagination
+          v-model:current="page.current"
           v-model:page-size="page.pageSize"
           :total="page.total"
           :page-sizes="[12, 24, 48]"
@@ -49,6 +49,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import Pagination from '../components/Pagination.vue'
 import { levelApi } from '../api/level'
 import { normalizeArray } from '../utils/format'
 

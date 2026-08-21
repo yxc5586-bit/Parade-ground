@@ -40,12 +40,9 @@
       </div>
 
       <div class="pagination">
-        <el-pagination
-          v-model:current-page="page.current"
+        <Pagination
+          v-model:current="page.current"
           v-model:page-size="page.pageSize"
-          background
-          layout="prev, pager, next, sizes, total"
-          :page-sizes="[5, 10, 20, 50]"
           :total="page.total"
           @current-change="fetchRecords"
           @size-change="handleSizeChange"
@@ -59,6 +56,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { Promotion } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import Pagination from '../components/Pagination.vue'
 import { gameApi } from '../api/game'
 import { formatDateTime, formatSalary, formatSignedMoney } from '../utils/format'
 import { createPendingTask } from '../utils/pendingTask'

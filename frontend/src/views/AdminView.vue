@@ -38,6 +38,7 @@
     </div>
 
     <!-- 关卡表格 -->
+    <div class="table-wrap">
     <el-table :data="tableData" v-loading="loading" class="level-table">
       <el-table-column prop="id" label="ID" width="70" align="center" />
       <el-table-column prop="levelId" label="业务编号" min-width="180" show-overflow-tooltip />
@@ -55,30 +56,27 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="精选操作" width="170" align="center" fixed="right">
-        <template #default="{ row }">
-          <el-button
-            v-if="row.priority !== 999"
-            type="warning"
-            size="small"
-            :icon="Star"
-            @click="handleSetPriority(row, 999)"
-          >
-            设为精选
-          </el-button>
-          <el-button
-            v-else
-            type="info"
-            size="small"
-            @click="handleSetPriority(row, 0)"
-          >
-            取消精选
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="170" align="center" fixed="right">
+      <el-table-column label="操作" width="280" align="center">
         <template #default="{ row }">
           <span class="action-btns">
+            <el-button
+              v-if="row.priority !== 999"
+              type="warning"
+              size="small"
+              :icon="Star"
+              @click="handleSetPriority(row, 999)"
+            >
+              设为精选
+            </el-button>
+            <el-button
+              v-else
+              type="info"
+              size="small"
+              :icon="Star"
+              @click="handleSetPriority(row, 0)"
+            >
+              取消精选
+            </el-button>
             <el-button type="primary" size="small" :icon="Edit" @click="openEditDialog(row)">编辑</el-button>
             <el-popconfirm title="确定要删除该关卡吗？" @confirm="handleDelete(row.id)">
               <template #reference>
@@ -89,19 +87,16 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
 
     <!-- 分页 -->
-    <div class="pagination-wrap">
-      <el-pagination
-        v-model:current-page="pagination.current"
-        v-model:page-size="pagination.pageSize"
-        :total="pagination.total"
-        :page-sizes="[10, 20, 50]"
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="fetchList"
-        @size-change="fetchList"
-      />
-    </div>
+    <Pagination
+      v-model:current="pagination.current"
+      v-model:page-size="pagination.pageSize"
+      :total="pagination.total"
+      @current-change="fetchList"
+      @size-change="fetchList"
+    />
 
     <!-- 编辑弹窗 -->
     <el-dialog v-model="editDialogVisible" title="编辑关卡" width="800px" destroy-on-close>
@@ -166,6 +161,7 @@
 import { Delete, Edit, Star } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
+import Pagination from '../components/Pagination.vue'
 import { levelApi } from '../api/level'
 
 const loading = ref(false)
@@ -335,11 +331,18 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 
-.level-table {
+.table-wrap {
+  overflow-x: auto;
   margin-bottom: 18px;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--line);
+}
+
+.level-table {
+  margin-bottom: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 860px;
 }
 
 .level-table :deep(.el-table__body tr:nth-child(even) td) {
@@ -363,10 +366,5 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-
-.pagination-wrap {
-  display: flex;
-  justify-content: flex-end;
 }
 </style>

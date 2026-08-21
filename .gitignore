@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+target/
+build/
+
+# Local config & secrets
+.env
+.env.*
+!.env.example
+application-local.yml
+application-*.local.yml
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-*.local.yml
+
+# Logs
+logs/
+*.log
+vite-dev*.log
+vite-dev*.err.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

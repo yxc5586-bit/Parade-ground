@@ -1,17 +1,22 @@
 spring:
+  config:
+    import: optional:application-local.yml
   application:
     name: Parade-ground-backend
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   session:
-    timeout: 7d
+    store-type: redis
+    timeout: 86400s
+    redis:
+      namespace: ${SPRING_SESSION_REDIS_NAMESPACE:spring:session}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
   jackson:
     default-property-inclusion: non_null
 

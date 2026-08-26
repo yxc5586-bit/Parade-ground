@@ -1,6 +1,15 @@
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: your_redis_password
+      database: 1
+  session:
+    redis:
+      namespace: parade:session
   datasource:
-    url: jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/parade_ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: your_mysql_password
 
@@ -8,3 +17,12 @@ langchain4j:
   open-ai:
     chat-model:
       api-key: your_openrouter_api_key
+
+server:
+  address: 127.0.0.1
+  port: 8123
+  servlet:
+    session:
+      cookie:
+        secure: false
+        same-site: lax

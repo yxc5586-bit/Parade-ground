@@ -7,14 +7,16 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:1}
   session:
     store-type: redis
-    timeout: 86400s
+    timeout: ${SESSION_TIMEOUT:86400s}
     redis:
-      namespace: ${SPRING_SESSION_REDIS_NAMESPACE:spring:session}
+      namespace: ${SPRING_SESSION_REDIS_NAMESPACE:parade:session}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai}
+    url: ${MYSQL_URL:jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:parade_ground}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:}
   jackson:
@@ -32,9 +34,15 @@ langchain4j:
       max-retries: 0
 
 server:
-  port: 8123
+  port: ${SERVER_PORT:8123}
   servlet:
-    context-path: /api
+    context-path: ${SERVER_CONTEXT_PATH:/api}
+    session:
+      cookie:
+        max-age: ${SESSION_COOKIE_MAX_AGE:86400s}
+        http-only: ${SESSION_COOKIE_HTTP_ONLY:true}
+        secure: ${SESSION_COOKIE_SECURE:false}
+        same-site: ${SESSION_COOKIE_SAME_SITE:lax}
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
@@ -58,3 +66,12 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS:health,info}
+  endpoint:
+    health:
+      show-details: ${MANAGEMENT_HEALTH_SHOW_DETAILS:always}

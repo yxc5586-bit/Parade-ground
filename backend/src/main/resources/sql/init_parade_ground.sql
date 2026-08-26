@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS `Parade-ground`
+CREATE DATABASE IF NOT EXISTS `parade_ground`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE `Parade-ground`;
+USE `parade_ground`;
 
 CREATE TABLE IF NOT EXISTS user_info (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
@@ -58,8 +58,3 @@ CREATE TABLE IF NOT EXISTS answer_record (
   KEY idx_userId_levelId (userId, levelId),
   KEY idx_levelId (levelId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Answer record table';
-
-
-ALTER TABLE user_info ADD COLUMN userAvatar VARCHAR(255) NULL COMMENT 'User avatar URL, NULL means use default';
-ALTER TABLE user_info ADD COLUMN userRole VARCHAR(16) NOT NULL DEFAULT 'user' COMMENT 'User role: user/admin';
-ALTER TABLE level_info ADD COLUMN priority INT NOT NULL DEFAULT 0 COMMENT 'Priority: 0=normal, 99=elevated, 999=featured, 9999=pinned';

@@ -1,0 +1,21 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8123}
+  servlet:
+    session:
+      cookie:
+        secure: ${SESSION_COOKIE_SECURE:false}
+        same-site: ${SESSION_COOKIE_SAME_SITE:lax}
+
+spring:
+  data:
+    redis:
+      database: ${REDIS_DATABASE:1}
+  session:
+    redis:
+      namespace: ${SPRING_SESSION_REDIS_NAMESPACE:parade:session}
+
+management:
+  endpoint:
+    health:
+      show-details: ${MANAGEMENT_HEALTH_SHOW_DETAILS:never}

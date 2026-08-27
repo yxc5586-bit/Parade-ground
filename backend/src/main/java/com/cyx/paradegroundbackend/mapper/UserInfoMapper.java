@@ -7,4 +7,8 @@ import org.apache.ibatis.annotations.Param;
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
     UserInfo selectByUserAccount(@Param("userAccount") String userAccount);
+
+    int updateSalaryIfCurrent(@Param("userId") Long userId,
+                              @Param("expectedSalary") Integer expectedSalary,
+                              @Param("updatedSalary") Integer updatedSalary);
 }

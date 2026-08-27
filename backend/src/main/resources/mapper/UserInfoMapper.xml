@@ -27,4 +27,12 @@
           AND isDelete = 0
         LIMIT 1
     </select>
+
+    <update id="updateSalaryIfCurrent">
+        UPDATE user_info
+        SET currentSalary = #{updatedSalary}
+        WHERE id = #{userId}
+          AND currentSalary = #{expectedSalary}
+          AND isDelete = 0
+    </update>
 </mapper>

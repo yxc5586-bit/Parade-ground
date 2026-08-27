@@ -33,4 +33,14 @@
           AND isDelete = 0
         ORDER BY createTime DESC
     </select>
+
+    <select id="selectByUserIdAndLevelId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM answer_record
+        WHERE userId = #{userId}
+          AND levelId = #{levelId}
+          AND isDelete = 0
+        LIMIT 1
+    </select>
 </mapper>

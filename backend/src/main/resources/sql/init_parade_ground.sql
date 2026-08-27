@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS answer_record (
   updateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update time',
   isDelete TINYINT NOT NULL DEFAULT 0 COMMENT 'Logic delete flag',
   PRIMARY KEY (id),
+  UNIQUE KEY uk_userId_levelId (userId, levelId),
   KEY idx_userId_createTime (userId, createTime),
-  KEY idx_userId_levelId (userId, levelId),
   KEY idx_levelId (levelId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Answer record table';

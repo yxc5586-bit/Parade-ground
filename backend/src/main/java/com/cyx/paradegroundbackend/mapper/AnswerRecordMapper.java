@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface AnswerRecordMapper extends BaseMapper<AnswerRecord> {
 
     List<AnswerRecord> selectByUserId(@Param("userId") Long userId);
+
+    AnswerRecord selectByUserIdAndLevelId(@Param("userId") Long userId, @Param("levelId") String levelId);
 }

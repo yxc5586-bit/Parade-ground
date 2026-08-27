@@ -9,6 +9,7 @@ public enum ErrorCode {
     SUCCESS(0, "ok"),
     PARAMS_ERROR(40000, "请求参数错误"),
     NOT_LOGIN_ERROR(40100, "未登录"),
+    CONFLICT_ERROR(40900, "数据冲突，请重试"),
     NOT_FOUND_ERROR(40400, "数据不存在"),
     OPERATION_ERROR(50000, "操作失败"),
     SYSTEM_ERROR(50001, "系统内部异常"),

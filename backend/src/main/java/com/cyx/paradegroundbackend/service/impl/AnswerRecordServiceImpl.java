@@ -27,6 +27,7 @@ import com.cyx.paradegroundbackend.model.entity.AnswerRecord;
 import com.cyx.paradegroundbackend.model.entity.LevelInfo;
 import com.cyx.paradegroundbackend.model.entity.UserInfo;
 import com.cyx.paradegroundbackend.service.AnswerRecordService;
+import com.cyx.paradegroundbackend.service.AnswerSettlementService;
 import com.cyx.paradegroundbackend.service.LevelInfoService;
 import com.cyx.paradegroundbackend.service.UserInfoService;
 import com.cyx.paradegroundbackend.util.CompanyAliasSanitizer;
@@ -46,13 +47,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
  * 作答记录服务实现 — 核心模块：
- * 1. 答案提交（submitAnswer）：组装AI评审请求 → 调用OpenRouter判题 → 计算得分 → 薪资结算 → 入库
+ * 1. 答案提交（submitAnswer）：组装AI评审请求 → 调用OpenRouter判题 → 计算得分 → 短事务结算
  * 2. 得分计算：基于precision/recall的F1-style评分算法，结合薪资档位计算薪资变化
  * 3. 容错兜底：AI返回异常时，使用本地规则计算得分并生成默认评价内容
  * 4. 公司名混淆：所有AI产出文本通过CompanyAliasSanitizer替换真实公司名
@@ -76,6 +76,12 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
 
     @Resource
     private CompanyAliasSanitizer companyAliasSanitizer;
+
+    @Resource
+    private AnswerRecordMapper answerRecordMapper;
+
+    @Resource
+    private AnswerSettlementService answerSettlementService;
 
     @Value("${langchain4j.open-ai.chat-model.api-key:}")
     private String openRouterApiKey;
@@ -149,7 +155,6 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public AnswerRecord submitAnswer(Long userId, GameSubmitRequest gameSubmitRequest) {
         if (gameSubmitRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -158,6 +163,11 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                 || !StringUtils.hasText(gameSubmitRequest.getLevelId())
                 || CollectionUtils.isEmpty(gameSubmitRequest.getSelectedOptionIds())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "Answer submit params are incomplete");
+        }
+
+        AnswerRecord existing = answerRecordMapper.selectByUserIdAndLevelId(userId, gameSubmitRequest.getLevelId());
+        if (existing != null) {
+            return existing;
         }
 
         ensureAiConfigured();
@@ -207,17 +217,8 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                 correctOptionIds,
                 sanitizedResult
         );
-        boolean saved = this.save(answerRecord);
-        if (!saved) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Failed to save answer record");
-        }
-
-        userInfo.setCurrentSalary(sanitizedResult.getUpdatedSalary());
-        boolean updated = userInfoService.updateById(userInfo);
-        if (!updated) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Failed to update user salary");
-        }
-        return answerRecord;
+        int expectedSalary = defaultIfNull(userInfo.getCurrentSalary(), UserConstant.INIT_SALARY);
+        return answerSettlementService.settle(answerRecord, expectedSalary, sanitizedResult.getUpdatedSalary());
     }
 
     private void ensureAiConfigured() {

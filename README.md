@@ -99,7 +99,7 @@ Parade-ground-github
 
 请先准备以下环境：
 
-- Node.js 20 或更高版本
+- Node.js 22 或更高版本
 - JDK 21
 - Maven
 - MySQL 8
@@ -110,7 +110,7 @@ Parade-ground-github
 在 MySQL 中创建数据库：
 
 ```sql
-CREATE DATABASE `Parade-ground` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE `parade_ground` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 然后执行初始化脚本：
@@ -136,7 +136,7 @@ backend/src/main/resources/application-example.yml
 常用配置项：
 
 ```text
-MYSQL_URL=jdbc:mysql://localhost:3306/Parade-ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+MYSQL_URL=jdbc:mysql://localhost:3306/parade_ground?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
 MYSQL_USERNAME=root
 MYSQL_PASSWORD=your_mysql_password
 REDIS_HOST=localhost
@@ -212,6 +212,8 @@ Windows：
 cd backend
 mvnw.cmd test
 ```
+
+生产构建会生成固定文件名 `backend/target/parade-ground.jar`。腾讯云轻量应用服务器和 1Panel 的直接部署模板位于 `deploy/`，真实密码和 API Key 只写入服务器受限环境文件。
 
 
 

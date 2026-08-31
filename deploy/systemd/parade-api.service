@@ -1,0 +1,30 @@
+[Unit]
+Description=Parade Ground API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=parade
+Group=parade
+WorkingDirectory=/opt/resume-demo/parade
+EnvironmentFile=/opt/resume-demo/config/parade.env
+ExecStart=/usr/bin/java -Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError -jar /opt/resume-demo/parade/app/parade-ground.jar
+ExecStartPost=/opt/resume-demo/parade/bin/wait-for-health.sh http://127.0.0.1:8123/api/actuator/health 90
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=30
+SuccessExitStatus=143
+MemoryMax=768M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/opt/resume-demo/parade/logs
+LimitNOFILE=65535
+StandardOutput=append:/opt/resume-demo/parade/logs/service.log
+StandardError=append:/opt/resume-demo/parade/logs/service-error.log
+
+[Install]
+WantedBy=multi-user.target
